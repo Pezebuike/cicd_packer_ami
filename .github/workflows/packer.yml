@@ -27,7 +27,7 @@ jobs:
           unzip packer.zip
           sudo mv packer /usr/local/bin/
           packer --version
-      - name: Get AWS permissions
+    #  - name: Get AWS permissions 
         # uses: aws-actions/configure-aws-credentials@v2
         # with:
         #     role-to-assume: arn:aws:iam::463470941358:role/packer-ami
