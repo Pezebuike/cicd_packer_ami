@@ -29,8 +29,11 @@ build {
 
   provisioner "shell" {
     inline = [
-      # Set non-interactive mode to suppress prompts
+      # Set non-interactive mode globally
       "export DEBIAN_FRONTEND=noninteractive",
+
+      # Disable dpkg-preconfigure to avoid stdin errors
+      "sudo rm -f /etc/apt/apt.conf.d/70debconf",
 
       # Update sources list to use HTTPS
       "sudo sed -i 's|http://archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list",
@@ -52,12 +55,15 @@ build {
       # Add the NGINX repository (hardcoded codename for Ubuntu 22.04 'jammy')
       "echo 'deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu jammy nginx' | sudo tee /etc/apt/sources.list.d/nginx.list > /dev/null",
 
-      # Update and install NGINX in non-interactive mode
+      # Update the package list
       "sudo apt-get update -y",
-      "sudo apt-get install -y nginx",
 
-      # Restore default frontend after provisioning (optional but recommended)
-      "export DEBIAN_FRONTEND="
+      # Preconfigure tzdata or other interactive packages (if needed)
+      "echo 'tzdata tzdata/Areas select Europe' | sudo debconf-set-selections",
+      "echo 'tzdata tzdata/Zones/Europe select London' | sudo debconf-set-selections",
+
+      # Install NGINX in non-interactive mode
+      "sudo apt-get install -y nginx"
     ]
   }
 
