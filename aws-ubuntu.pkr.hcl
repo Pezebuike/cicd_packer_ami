@@ -39,20 +39,20 @@ build {
       "sudo rm -rf /var/lib/apt/lists/*",
       "sudo apt-get clean",
 
-      # Install required dependencies (gnupg for GPG keys)
+      # Install required dependencies (gnupg for GPG keys and curl)
       "sudo apt-get update -y",
       "sudo apt-get install -y gnupg curl",
 
-      # Create the directory for keyrings
+      # Create the directory for keyrings if it doesn't exist
       "sudo mkdir -p /usr/share/keyrings",
 
-      # Add the GPG key for the repository securely
-      "curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --batch --yes --no-tty --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg",
+      # Add the GPG key for the repository securely with proper permissions
+      "curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo gpg --batch --yes --no-tty --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg",
 
       # Add the official NGINX repository
-      "echo 'deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu $(lsb_release -cs) nginx' | sudo tee /etc/apt/sources.list.d/nginx.list",
+      "echo 'deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu $(lsb_release -cs) nginx' | sudo tee /etc/apt/sources.list.d/nginx.list > /dev/null",
 
-      # Update and install NGINX
+      # Update the package list and install NGINX
       "sudo apt-get update -y",
       "sudo apt-get install -y nginx"
     ]
