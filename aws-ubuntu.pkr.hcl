@@ -32,7 +32,7 @@ build {
       # Set non-interactive mode globally
       "export DEBIAN_FRONTEND=noninteractive",
 
-      # Disable dpkg-preconfigure to avoid stdin errors
+      # Disable dpkg-preconfigure to avoid stdin 
       "sudo rm -f /etc/apt/apt.conf.d/70debconf",
 
       # Update sources list to use HTTPS
