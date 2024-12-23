@@ -1,5 +1,4 @@
 name: Packer Build
-
 on:
   push:
     branches:
