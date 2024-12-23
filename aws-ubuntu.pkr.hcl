@@ -29,27 +29,31 @@ build {
 
   provisioner "shell" {
     inline = [
-      # Set non-interactive mode
+      # Set non-interactive mode to avoid prompts
       "export DEBIAN_FRONTEND=noninteractive",
 
       # Update sources list to use HTTPS
       "sudo sed -i 's|http://archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list",
 
-      # Clean APT cache
+      # Clean APT cache and remove corrupted lists
       "sudo rm -rf /var/lib/apt/lists/*",
       "sudo apt-get clean",
 
-      # Install GPG if not installed
-      "sudo apt-get install -y gnupg",
-
-      # Add the keyring manually
-      "sudo mkdir -p /usr/share/keyrings",
-      "curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --no-tty --dearmor -o /usr/share/keyrings/ubuntu-archive-keyring.gpg",
-
-      # Update and upgrade without interaction
+      # Install required dependencies (gnupg for GPG keys)
       "sudo apt-get update -y",
-      "sudo apt-get upgrade -y",
-      # Install GPG if not installed
+      "sudo apt-get install -y gnupg curl",
+
+      # Create the directory for keyrings
+      "sudo mkdir -p /usr/share/keyrings",
+
+      # Add the GPG key for the repository securely
+      "curl -fsSL https://nginx.org/keys/nginx_signing.key | gpg --batch --yes --no-tty --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg",
+
+      # Add the official NGINX repository
+      "echo 'deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu $(lsb_release -cs) nginx' | sudo tee /etc/apt/sources.list.d/nginx.list",
+
+      # Update and install NGINX
+      "sudo apt-get update -y",
       "sudo apt-get install -y nginx"
     ]
   }
