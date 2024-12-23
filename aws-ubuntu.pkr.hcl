@@ -29,24 +29,27 @@ build {
 
   provisioner "shell" {
     inline = [
-        # Set non-interactive mode
+      # Set non-interactive mode
       "export DEBIAN_FRONTEND=noninteractive",
 
-      # Fix sources list (use HTTPS)
+      # Update sources list to use HTTPS
       "sudo sed -i 's|http://archive.ubuntu.com/ubuntu|https://archive.ubuntu.com/ubuntu|g' /etc/apt/sources.list",
 
-      # Clean APT cache and remove corrupted lists
+      # Clean APT cache
       "sudo rm -rf /var/lib/apt/lists/*",
       "sudo apt-get clean",
 
-      # Import missing GPG keys
-      "curl -fsSL https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3B4FE6ACC0B21F32 | sudo gpg --dearmor -o /usr/share/keyrings/ubuntu-archive-keyring.gpg",
+      # Install GPG if not installed
+      "sudo apt-get install -y gnupg",
+
+      # Add the keyring manually
+      "sudo mkdir -p /usr/share/keyrings",
+      "curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | gpg --no-tty --dearmor -o /usr/share/keyrings/ubuntu-archive-keyring.gpg",
 
       # Update and upgrade without interaction
       "sudo apt-get update -y",
       "sudo apt-get upgrade -y",
-
-      # Install desired packages non-interactively
+      # Install GPG if not installed
       "sudo apt-get install -y nginx"
     ]
   }
