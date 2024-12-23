@@ -29,6 +29,7 @@ build {
 
   provisioner "shell" {
     inline = [
+      "export DEBIAN_FRONTEND=noninteractive",
       "echo Installing Updates",
       "sudo apt-get update",
       "sudo apt-get upgrade -y",
