@@ -29,7 +29,7 @@ build {
 
   provisioner "shell" {
     inline = [
-      # Set non-interactive mode to avoid prompts
+      # Set non-interactive mode to suppress prompts
       "export DEBIAN_FRONTEND=noninteractive",
 
       # Update sources list to use HTTPS
@@ -52,9 +52,12 @@ build {
       # Add the NGINX repository (hardcoded codename for Ubuntu 22.04 'jammy')
       "echo 'deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu jammy nginx' | sudo tee /etc/apt/sources.list.d/nginx.list > /dev/null",
 
-      # Update the package list and install NGINX
+      # Update and install NGINX in non-interactive mode
       "sudo apt-get update -y",
-      "sudo apt-get install -y nginx"
+      "sudo apt-get install -y nginx",
+
+      # Restore default frontend after provisioning (optional but recommended)
+      "export DEBIAN_FRONTEND="
     ]
   }
 
