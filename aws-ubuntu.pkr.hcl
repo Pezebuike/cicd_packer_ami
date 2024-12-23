@@ -46,11 +46,11 @@ build {
       # Create the directory for keyrings if it doesn't exist
       "sudo mkdir -p /usr/share/keyrings",
 
-      # Add the GPG key for the repository securely with proper permissions
+      # Add the GPG key for the NGINX repository securely
       "curl -fsSL https://nginx.org/keys/nginx_signing.key | sudo gpg --batch --yes --no-tty --dearmor -o /usr/share/keyrings/nginx-archive-keyring.gpg",
 
-      # Add the official NGINX repository
-      "echo 'deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu $(lsb_release -cs) nginx' | sudo tee /etc/apt/sources.list.d/nginx.list > /dev/null",
+      # Add the NGINX repository (hardcoded codename for Ubuntu 22.04 'jammy')
+      "echo 'deb [signed-by=/usr/share/keyrings/nginx-archive-keyring.gpg] http://nginx.org/packages/ubuntu jammy nginx' | sudo tee /etc/apt/sources.list.d/nginx.list > /dev/null",
 
       # Update the package list and install NGINX
       "sudo apt-get update -y",
