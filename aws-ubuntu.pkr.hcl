@@ -31,7 +31,7 @@ build {
     inline = [
       "export DEBIAN_FRONTEND=noninteractive",
       "echo Installing Updates",
-      "sudo apt-get update",
+      "sudo apt-get update -y",
       "sudo apt-get upgrade -y",
       "sudo apt-get install -y nginx"
     ]
